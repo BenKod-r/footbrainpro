@@ -15,4 +15,4 @@ RUN apt-get update && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Expose le port HTTP et HTTPS
-EXPOSE 80 443
+EXPOSE 80
