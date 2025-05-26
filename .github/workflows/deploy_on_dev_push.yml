@@ -29,6 +29,7 @@ jobs:
           docker compose -f compose.dev.built.yaml build
           docker tag footbrainpro_app:latest ${{ secrets.DOCKER_USERNAME }}/footbrainpro:${{ github.sha }}
           docker push ${{ secrets.DOCKER_USERNAME }}/footbrainpro:${{ github.sha }}
+          docker tag footbrainpro_app:latest ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:latest
 
       - name: 🚀 Deploy to DEV via SSH
