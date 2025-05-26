@@ -1,0 +1,29 @@
+server:
+  address: 0.0.0.0
+  port: 80
+  ssl:
+    enabled: true
+    address: 0.0.0.0
+    port: 443
+    cert_file: /etc/ssl/certs/localhost.crt
+    key_file: /etc/ssl/private/localhost.key
+
+application:
+  root: /app/public
+  index_files: ["index.php"]
+  php_ini_overrides:
+    memory_limit: 512M
+    error_reporting: -1
+    display_errors: 1
+  env:
+    APP_ENV: "dev"
+    APP_DEBUG: "1"
+
+routing:
+  rewrite:
+    - from: "^/.*$"
+      to: "/index.php"
+
+log:
+  level: debug
+  file: /app/var/log/dev.log

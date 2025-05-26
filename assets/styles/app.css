@@ -1,3 +1,8 @@
 body {
-    background-color: skyblue;
+  background-color: blue;
 }
+body div {
+  color: grey;
+}
+
+/*# sourceMappingURL=app.css.map */
