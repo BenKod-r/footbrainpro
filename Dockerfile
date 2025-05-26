@@ -14,5 +14,7 @@ RUN apt-get update && \
     php composer.phar install --no-scripts --no-interaction && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+COPY frankenphp.yaml /etc/frankenphp.yaml
+
 # Expose le port HTTP et HTTPS
 EXPOSE 80
