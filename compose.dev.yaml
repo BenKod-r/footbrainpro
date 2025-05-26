@@ -1,42 +1,22 @@
-version: '3.8'
-
+version: "3"
 services:
-  app:
-    build:
-      context: .
-    image: footbrainpro_app
-    expose:
-      - "80"
-    environment:
-      APP_ENV: dev
-      COMPOSER_ALLOW_SUPERUSER: 1
-      DATABASE_URL: "mysql://symfony:password@database:3306/footbrainpro?serverVersion=8.0"
-      VIRTUAL_HOST: dev.footbrainpro.com
-      VIRTUAL_PORT: 80
-      LETSENCRYPT_HOST: dev.footbrainpro.com
-      LETSENCRYPT_EMAIL: ton.email@example.com
-    depends_on:
-      - database
-    networks:
-      - internal
-
   database:
-    image: mysql:8.0
     restart: always
+    image: mysql:8
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: footbrainpro_dev
-      MYSQL_USER: symfony
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
     expose:
       - "3306"
     volumes:
-      - db-data:/var/lib/mysql
-    networks:
-      - internal
+      - db_data:/var/lib/mysql
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile_dev
+    image: footbrainpro_app
+    ports:
+      - "80:80"
 
 volumes:
-  db-data:
-
-networks:
-  internal:
+  db_data: {}
