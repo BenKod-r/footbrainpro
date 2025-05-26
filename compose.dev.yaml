@@ -4,6 +4,8 @@ services:
   app:
     build:
       context: .
+    ports:
+      - "80:80"
     image: footbrainpro_app
     environment:
       APP_ENV: dev
@@ -17,9 +19,11 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: footbrainpro
+      MYSQL_DATABASE: footbrainpro_dev
       MYSQL_USER: symfony
       MYSQL_PASSWORD: password
+    expose:
+      - "3306"
     volumes:
       - db-data:/var/lib/mysql
 

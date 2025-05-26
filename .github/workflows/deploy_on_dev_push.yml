@@ -35,9 +35,10 @@ jobs:
       - name: 🚀 Deploy to DEV via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
+          command_timeout: 1200 # 20 minutes
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            sudo docker-compose pull
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:latest
             sudo docker-compose up -d --remove-orphans
