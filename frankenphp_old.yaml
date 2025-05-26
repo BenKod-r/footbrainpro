@@ -1,9 +1,12 @@
 server:
   address: 0.0.0.0
   port: 80
-  # Désactivation complète du SSL ici
   ssl:
-    enabled: false
+    enabled: true
+    address: 0.0.0.0
+    port: 443
+    cert_file: /etc/ssl/certs/localhost.crt
+    key_file: /etc/ssl/private/localhost.key
 
 application:
   root: /app/public
