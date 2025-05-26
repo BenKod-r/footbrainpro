@@ -37,6 +37,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            sed -i "s/IMAGE_TAG/${{ github.sha }}/g" compose.dev.yaml
-            docker compose -f compose.dev.yaml pull
-            docker compose -f compose.dev.yaml up -d
+            sed -i "s/IMAGE_TAG/${{ github.sha }}/g" docker-compose.yaml
+            docker compose -f docker-compose pull
+            docker compose -f docker-compose up -d
