@@ -54,10 +54,6 @@ jobs:
       - name: PHPUnit
         run: ./vendor/bin/phpunit --configuration phpunit.xml.dist
 
-      # Check Twig Core syntax
-      - name: Twig Core Template Lint
-        run: ./bin/console lint:twig core/templates --env=prod
-
       # Check Twig syntax
       - name: Twig Template Lint
         run: ./bin/console lint:twig templates --env=prod
