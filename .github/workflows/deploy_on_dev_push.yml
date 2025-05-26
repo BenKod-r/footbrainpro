@@ -1,10 +1,8 @@
 ### ✅ deploy_on_dev_push.yml : build & push image Docker en dev (tag = commit SHA)
 name: Deploy to Dev on push to dev
-
 on:
   push:
     branches: [ dev ]
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -32,7 +30,7 @@ jobs:
           docker tag footbrainpro_app:latest ${{ secrets.DOCKER_USERNAME }}/footbrainpro:${{ github.sha }}
           docker push ${{ secrets.DOCKER_USERNAME }}/footbrainpro:${{ github.sha }}
 
-      - name: 🚀 Deploy to PROD via SSH
+      - name: 🚀 Deploy to DEV via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
