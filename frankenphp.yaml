@@ -1,26 +1,26 @@
-server:
-  address: 0.0.0.0
-  port: 80
-  # Désactivation complète du SSL ici
-  ssl:
-    enabled: false
-
-application:
-  root: /app/public
-  index_files: ["index.php"]
-  php_ini_overrides:
-    memory_limit: 512M
-    error_reporting: -1
-    display_errors: 1
-  env:
-    APP_ENV: "dev"
-    APP_DEBUG: "1"
-
-routing:
-  rewrite:
-    - from: "^/.*$"
-      to: "/index.php"
-
-log:
-  level: debug
-  file: /app/var/log/dev.log
+#server:
+#  address: 0.0.0.0
+#  port: 80
+#  # Désactivation complète du SSL ici
+#  ssl:
+#    enabled: false
+#
+#application:
+#  root: /app/public
+#  index_files: ["index.php"]
+#  php_ini_overrides:
+#    memory_limit: 512M
+#    error_reporting: -1
+#    display_errors: 1
+#  env:
+#    APP_ENV: "dev"
+#    APP_DEBUG: "1"
+#
+#routing:
+#  rewrite:
+#    - from: "^/.*$"
+#      to: "/index.php"
+#
+#log:
+#  level: debug
+#  file: /app/var/log/dev.log
