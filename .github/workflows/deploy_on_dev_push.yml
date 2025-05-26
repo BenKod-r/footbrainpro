@@ -37,6 +37,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            sudo su
             sed -i "s/IMAGE_TAG/${{ github.sha }}/g" docker-compose.yml
             docker-compose pull
             docker-compose up -d --remove-orphans
