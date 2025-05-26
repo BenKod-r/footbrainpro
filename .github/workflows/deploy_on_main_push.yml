@@ -1,10 +1,8 @@
 ### ✅ deploy_on_main_push.yml : build & push image Docker en production (tag = `latest`)
 name: Deploy to Prod on merge to main
-
 on:
   push:
     branches: [ main ]
-
 jobs:
   deploy:
     runs-on: ubuntu-latest

@@ -4,6 +4,7 @@ services:
   app:
     build:
       context: .
+    image: footbrainpro_app
     environment:
       APP_ENV: dev
       COMPOSER_ALLOW_SUPERUSER: 1
