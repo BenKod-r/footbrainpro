@@ -10,7 +10,7 @@ jobs:
     continue-on-error: false # or true
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       # https://github.com/shivammathur/setup-php (community)
       - name: Setup PHP, extensions and composer with shivammathur/setup-php
@@ -20,7 +20,7 @@ jobs:
           php-version: 8.2
 
       - name: Cache multiple paths
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             vendor
