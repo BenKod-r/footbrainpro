@@ -10,7 +10,7 @@ RUN docker-php-ext-configure intl
 RUN docker-php-ext-install intl
 RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
-    && apt-get clean \
+    && apt-get clean
 RUN apt-get install -y git unzip && \
     curl -sS https://getcomposer.org/installer | php && \
     php composer.phar install --no-scripts --no-interaction && \
