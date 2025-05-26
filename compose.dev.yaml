@@ -4,15 +4,21 @@ services:
   app:
     build:
       context: .
-    ports:
-      - "80:80"
     image: footbrainpro_app
+    expose:
+      - "80"
     environment:
       APP_ENV: dev
       COMPOSER_ALLOW_SUPERUSER: 1
       DATABASE_URL: "mysql://symfony:password@database:3306/footbrainpro?serverVersion=8.0"
+      VIRTUAL_HOST: dev.footbrainpro.com
+      VIRTUAL_PORT: 80
+      LETSENCRYPT_HOST: dev.footbrainpro.com
+      LETSENCRYPT_EMAIL: ton.email@example.com
     depends_on:
       - database
+    networks:
+      - internal
 
   database:
     image: mysql:8.0
@@ -26,6 +32,11 @@ services:
       - "3306"
     volumes:
       - db-data:/var/lib/mysql
+    networks:
+      - internal
 
 volumes:
   db-data:
+
+networks:
+  internal:
