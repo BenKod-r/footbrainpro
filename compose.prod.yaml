@@ -1,27 +1,22 @@
-version: '3.8'
-
+version: "3"
 services:
+  database:
+    restart: always
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    expose:
+      - "3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
   app:
     build:
       context: .
-    image: khaleddwm/footbrainpro:latest
-    environment:
-      APP_ENV: prod
-      COMPOSER_ALLOW_SUPERUSER: 1
-      DATABASE_URL: "mysql://symfony:password@database:3306/footbrainpro?serverVersion=8.0"
-    depends_on:
-      - database
-
-  database:
-    image: mysql:8.0
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: footbrainpro_prod
-      MYSQL_USER: symfony
-      MYSQL_PASSWORD: password
-    volumes:
-      - db-data:/var/lib/mysql
+      dockerfile: Dockerfile_prod
+    image: footbrainpro_app
+    ports:
+      - "80:80"
 
 volumes:
-  db-data:
+  db_data: {}
