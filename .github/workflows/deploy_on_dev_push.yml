@@ -42,7 +42,7 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:latest
             sudo docker-compose up -d --remove-orphans
             sleep 10
-            CONTAINER_NAME=$(docker ps --filter ancestor=khaleddwm/footbrainpro_dev:latest --format "{{.Names}}" | head -n 1)
+            CONTAINER_NAME=$(docker ps --filter ancestor=${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:latest --format "{{.Names}}" | head -n 1)
             sudo docker exec $CONTAINER_NAME php bin/console cache:clear
             sudo docker exec $CONTAINER_NAME npm install
             sudo docker exec $CONTAINER_NAME php bin/console doctrine:database:create --if-not-exists
