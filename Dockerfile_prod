@@ -7,7 +7,7 @@ RUN a2enmod rewrite
 COPY . /var/www/html
 
 # Configuration Apache personnalisée
-ADD ./000-default-dev.conf /etc/apache2/sites-available/000-default.conf
+ADD ./000-default-prod.conf /etc/apache2/sites-available/000-default.conf
 
 # Installation des extensions PHP
 RUN apt-get update && apt-get install -y \
@@ -20,6 +20,15 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_mysql \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl
+
+# Installation et configuration d'OPcache
+RUN docker-php-ext-install opcache && \
+    echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+    echo "opcache.memory_consumption=128" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+    echo "opcache.interned_strings_buffer=8" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+    echo "opcache.max_accelerated_files=10000" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+    echo "opcache.revalidate_freq=0" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
+    echo "opcache.validate_timestamps=0" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
 # Installation de Node.js
 RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
