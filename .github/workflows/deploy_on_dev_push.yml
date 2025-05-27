@@ -1,26 +1,29 @@
 ### ✅ deploy_on_dev_push.yml : build & push image Docker en dev (tag = commit SHA)
-name: Deploy to Dev on merge to dev
+name: 🧪 Deploy to Dev on merge to dev
+
 on:
   push:
     branches: [ dev ]
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: development
 
     steps:
-      - uses: actions/checkout@v4
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
+      - name: 🧱 Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Docker Login
+      - name: 🔐 Docker Login
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and Push Dev Image
+      - name: 🛠️ Build and Push Dev Image
         run: |
           # Remplace dynamiquement le tag dans le fichier compose
           sed "s|IMAGE_TAG|${{ github.sha }}|g" compose.dev.yaml > compose.dev.built.yaml
@@ -42,12 +45,30 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:latest
             sudo docker-compose up -d --remove-orphans
             sleep 10
+            
+            # Récupère le nom du conteneur
             CONTAINER_FOOTBRAINPRO_DEV=$(sudo docker ps --filter ancestor=${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:latest --format "{{.Names}}" | head -n 1)
+
+            # Nettoyage du cache
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console cache:clear
+
+            # Installation des dépendances front
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV npm install
+
+            # Création de la base de données (si non existante)
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console doctrine:database:create --if-not-exists
+
+            # Migration de la base de données
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console doctrine:migrations:migrate --no-interaction
+
+            # Suppression des assets obsolètes
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV rm -rf public/assets
+
+            # Installation d'importmap
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console importmap:install
+
+            # Compilation des styles SCSS → CSS
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV sass assets/styles/app.scss:assets/styles/app.css
+
+            # Compilation de asset-map
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console asset-map:compile
