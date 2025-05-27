@@ -7,7 +7,7 @@ RUN a2enmod rewrite
 COPY . /var/www/html
 
 # Configuration Apache personnalisée
-ADD ./000-default-dev.conf /etc/apache2/sites-available/000-default.conf
+ADD ./000-default-prod.conf /etc/apache2/sites-available/000-default.conf
 
 # Installation des extensions PHP
 RUN apt-get update && apt-get install -y \
