@@ -30,10 +30,8 @@ jobs:
 
           # Build & push via Docker Compose
           docker compose -f compose.dev.built.yaml build
-          docker tag footbrainpro_app:latest ${{ secrets.DOCKER_USERNAME }}/footbrainpro:${{ github.sha }}
-          docker push ${{ secrets.DOCKER_USERNAME }}/footbrainpro:${{ github.sha }}
-          docker tag footbrainpro_app:latest ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:latest
+          docker tag footbrainpro_app:latest ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:${{ github.sha }}
 
       - name: 🚀 Deploy to DEV via SSH
         uses: appleboy/ssh-action@v1.0.0
@@ -42,12 +40,13 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:${{ github.sha }}
+            sudo docker tag ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:${{ github.sha }} footbrainpro_dev:latest
             sudo docker-compose up -d --remove-orphans
             sleep 10
             
             # Récupère le nom du conteneur
-            CONTAINER_FOOTBRAINPRO_DEV=$(sudo docker ps --filter ancestor=${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:latest --format "{{.Names}}" | head -n 1)
+            CONTAINER_FOOTBRAINPRO_DEV=$(sudo docker ps --filter ancestor=footbrainpro_dev:latest --format "{{.Names}}" | head -n 1)
 
             # Nettoyage du cache
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console cache:clear

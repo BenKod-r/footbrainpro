@@ -25,10 +25,13 @@ jobs:
 
       - name: 🛠️ Build and Push Prod Image
         run: |
+          # Remplace dynamiquement le tag dans le fichier compose
+          sed "s|IMAGE_TAG|${{ github.sha }}|g" compose.prod.yaml > compose.prod.built.yaml
+
           # Build & push via Docker Compose
-          docker compose -f compose.prod.yaml build
-          docker tag footbrainpro_app:latest ${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest
+          docker compose -f compose.prod.built.yaml build
+          docker tag footbrainpro_app:latest ${{ secrets.DOCKER_USERNAME }}/footbrainpro_prod:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/footbrainpro_prod:${{ github.sha }}
 
       - name: 🚀 Deploy to PROD via SSH
         uses: appleboy/ssh-action@v1.0.0
@@ -37,7 +40,8 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro_prod:${{ github.sha }}
+            sudo docker tag ${{ secrets.DOCKER_USERNAME }}/footbrainpro_prod:${{ github.sha }} footbrainpro:latest
             sudo docker-compose up -d --remove-orphans
             sleep 10
 
