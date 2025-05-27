@@ -1,0 +1,9 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile_prod
+    image: footbrainpro_app
+    ports:
+      - "80:80"

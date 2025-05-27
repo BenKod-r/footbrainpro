@@ -1,0 +1,20 @@
+includes:
+#    - vendor/phpstan/phpstan-symfony/extension.neon
+
+parameters:
+    level: 7
+
+    paths:
+        - src
+        - tests
+
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+
+    reportUnmatchedIgnoredErrors: false
+
+    ignoreErrors:
+        - '#no type specified#'
+        - '#Component#'
+        - identifier: missingType.iterableValue
+        - identifier: missingType.generics

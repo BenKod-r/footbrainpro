@@ -5,6 +5,12 @@ framework:
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
+    trusted_hosts: ~
+
+    # Ajout de la configuration des proxies de confiance
+    trusted_proxies: '127.0.0.1, 0.0.0.0/0'  # Traefik est souvent sur le réseau local, ou ajoute l'IP/les IP de ton reverse proxy
+    trusted_headers: [ 'X_FORWARDED_PROTO' ]  # On fait confiance à ce header pour savoir si c'est HTTPS
+
     #esi: true
     #fragments: true
 
