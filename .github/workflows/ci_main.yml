@@ -1,48 +1,55 @@
-name: Main PR CI
+### ✅ ci_main.yml : CI sur PR vers `main`
+name: 🚀 Main PR CI
+
 on:
   pull_request:
     branches: [ main ]
     paths-ignore:
       - 'config/packages/reset_password.yaml'
+
 jobs:
   ci:
     runs-on: ubuntu-latest
     continue-on-error: false # or true
+
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
 
-      # https://github.com/shivammathur/setup-php (community)
-      - name: Setup PHP, extensions and composer with shivammathur/setup-php
+      # Setup PHP, extensions and composer with shivammathur/setup-php
+      - name: 🧰 Setup PHP, extensions and Composer
         uses: shivammathur/setup-php@v2
         with:
           extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, iconv, json, mbstring, pdo
           php-version: 8.2
 
-      - name: Cache multiple paths
+      # Cache Composer dependencies
+      - name: 🗃️ Cache multiple paths
         uses: actions/cache@v4
         with:
           path: |
             vendor
           key: ${{ runner.os }}-${{ hashFiles('composer.lock') }}
 
-      - name: "Composer install"
+      # Install Composer dependencies
+      - name: 📦 Composer install
         run: |
           composer config --no-plugins allow-plugins.phpstan/extension-installer true
           composer install --no-interaction --no-progress
 
       # Install Symfony CLI
-      - name: Symfony CLI
+      - name: 🧭 Symfony CLI
         run: |
           curl -sS https://get.symfony.com/cli/installer | bash
           mv /home/runner/.symfony5/bin/symfony /usr/local/bin/symfony
 
       # Check vulnerabilities
-      - name: Symfony Check Vulnerabilities
+      - name: 🔐 Symfony Check Vulnerabilities
         run: symfony check:security
 
-      # PHP STAN
-      - name: PHP Stan
+      # Run PHPStan for static analysis
+      - name: 🧠 PHP Stan
         run: |
           ./vendor/bin/simple-phpunit install
           composer require phpstan/phpstan
@@ -50,22 +57,22 @@ jobs:
           composer require phpstan/phpstan-symfony
           ./vendor/bin/phpstan analyse src --memory-limit 1G
 
-      # PHPUnit tests
-      - name: PHPUnit
+      # Run PHPUnit tests
+      - name: ✅ PHPUnit
         run: ./vendor/bin/phpunit --configuration phpunit.xml.dist
 
-      # Check Twig syntax
-      - name: Twig Template Lint
+      # Lint Twig templates
+      - name: 🧾 Twig Template Lint
         run: ./bin/console lint:twig templates --env=prod
 
-      # Check YAML syntax
-      - name: Lint YAML files
+      # Lint YAML config
+      - name: 📘 Lint YAML files
         run: ./bin/console lint:yaml config --parse-tags
 
-      # Check service parameter
-      - name: Lint Parameters and Services
+      # Lint service container configuration
+      - name: 🧪 Lint Parameters and Services
         run: ./bin/console lint:container --no-debug
 
-      # Check doctrine entities schema
-      - name: Lint Doctrine entities
+      # Validate Doctrine entities schema
+      - name: 🗄️ Lint Doctrine entities
         run: ./bin/console doctrine:schema:validate --skip-sync -vvv --no-interaction

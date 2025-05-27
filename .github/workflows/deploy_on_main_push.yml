@@ -1,27 +1,31 @@
 ### ✅ deploy_on_main_push.yml : build & push image Docker en production (tag = `latest`)
-name: Deploy to Prod on merge to main
+name: 🚀 Deploy to Prod on merge to main
+
 on:
   push:
     branches: [ main ]
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: production
 
     steps:
-      - uses: actions/checkout@v4
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
+      - name: 🧱 Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Docker Login
+      - name: 🔐 Docker Login
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and Push Prod Image
+      - name: 🛠️ Build and Push Prod Image
         run: |
+          # Build & push via Docker Compose
           docker compose -f compose.prod.yaml build
           docker tag footbrainpro_app:latest ${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest
@@ -36,15 +40,39 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest
             sudo docker-compose up -d --remove-orphans
             sleep 10
+
+            # Récupère le nom du conteneur
             CONTAINER_FOOTBRAINPRO=$(sudo docker ps --filter ancestor=${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest --format "{{.Names}}" | head -n 1)
+
+            # Nettoyage du cache (dev)
             sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console cache:clear
+
+            # Installation des dépendances front
             sudo docker exec $CONTAINER_FOOTBRAINPRO npm install
+
+            # Création de la BDD si non existante
             sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console doctrine:database:create --if-not-exists
+
+            # Migration de la base de données (prod)
             sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console doctrine:migrations:migrate --no-interaction --env=prod
+
+            # Suppression des assets obsolètes
             sudo docker exec $CONTAINER_FOOTBRAINPRO rm -rf public/assets
+
+            # Installation d'importmap
             sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console importmap:install
+
+            # Compilation des styles SCSS
             sudo docker exec $CONTAINER_FOOTBRAINPRO sass assets/styles/app.scss:assets/styles/app.css
+
+            # Compilation de asset-map
             sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console asset-map:compile
+
+            # Nettoyage du cache (prod)
             sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console cache:clear --env=prod
+
+            # Préchauffage du cache (prod)
             sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console cache:warmup --env=prod
+
+            # Nettoyage du cache Doctrine
             sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console doctrine:cache:clear-metadata --env=prod
