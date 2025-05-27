@@ -50,3 +50,4 @@ jobs:
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console importmap:install
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV rm -rf public/assets
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console asset-map:compile
+            sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV sass assets/styles/app.scss:assets/styles/app.css
