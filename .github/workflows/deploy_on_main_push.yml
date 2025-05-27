@@ -80,6 +80,3 @@ jobs:
 
             # Nettoyage du cache Doctrine
             sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console doctrine:cache:clear-metadata --env=prod
-            
-            # Nettoyage d'images non utilisées
-            sudo docker system prune -a --volumes
