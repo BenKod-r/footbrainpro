@@ -22,7 +22,8 @@ jobs:
 
       - name: Build and Push Prod Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest .
+          docker compose -f compose.prod.yaml build
+          docker tag footbrainpro_app:latest ${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest
 
       - name: 🚀 Deploy to PROD via SSH
