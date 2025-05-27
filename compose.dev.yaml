@@ -1,15 +1,5 @@
 version: "3"
 services:
-#  database:
-#    restart: always
-#    image: mysql:8
-#    environment:
-#      MYSQL_ROOT_PASSWORD: password
-#    expose:
-#      - "3306"
-#    volumes:
-#      - db_data:/var/lib/mysql
-
   app:
     build:
       context: .
@@ -17,6 +7,3 @@ services:
     image: footbrainpro_app
     ports:
       - "80:80"
-#
-#volumes:
-#  db_data: {}
