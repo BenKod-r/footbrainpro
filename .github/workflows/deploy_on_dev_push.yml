@@ -72,3 +72,6 @@ jobs:
 
             # Compilation de asset-map
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console asset-map:compile
+            
+            # Nettoyage du cache
+            sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console cache:clear
