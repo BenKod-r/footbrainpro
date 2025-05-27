@@ -40,8 +40,18 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            # Stoppe et supprime les conteneurs utilisant l'image (optionnel si `--remove-orphans` gère tout)
+            sudo docker-compose down
+            # Supprime l'image only si elle existe
+            sudo docker rmi footbrainpro_prod:latest || true
+            # Pull de l’image fraîchement buildée
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro_prod:${{ github.sha }}
+            # Retag
+            sudo docker tag ${{ secrets.DOCKER_USERNAME }}/footbrainpro_prod:${{ github.sha }} footbrainpro_prod:latest
+            # Redémarre les services
             sudo docker-compose up -d --remove-orphans
+            
+            # Arrêt de 10 secondes
             sleep 10
 
             # Récupère le nom du conteneur
