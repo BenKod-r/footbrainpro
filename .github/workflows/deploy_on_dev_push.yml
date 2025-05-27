@@ -42,7 +42,7 @@ jobs:
           script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:${{ github.sha }}
             sudo docker tag ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:${{ github.sha }} footbrainpro_dev:latest
-            sudo docker-compose up -d --remove-orphans
+            sudo docker-compose --env-file .env up -d --remove-orphans
             sleep 10
             
             # Récupère le nom du conteneur
