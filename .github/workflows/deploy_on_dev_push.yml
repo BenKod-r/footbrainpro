@@ -41,3 +41,6 @@ jobs:
           script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:latest
             sudo docker-compose up -d --remove-orphans
+            sleep 10
+            CONTAINER_ID=$(sudo docker ps -qf "name=footbrainpro_dev")
+            sudo docker exec $CONTAINER_ID php bin/console doctrine:database:create --if-not-exists
