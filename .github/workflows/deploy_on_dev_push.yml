@@ -74,3 +74,6 @@ jobs:
             
             # Nettoyage du cache
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console cache:clear
+            
+            # Nettoyage d'images non utilisées
+            sudo docker system prune -a --volumes
