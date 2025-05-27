@@ -32,5 +32,15 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker compose pull
-            docker compose up -d
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest
+            sudo docker-compose up -d --remove-orphans
+            sleep 10
+            CONTAINER_FOOTBRAINPRO=$(sudo docker ps --filter ancestor=${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:latest --format "{{.Names}}" | head -n 1)
+            sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console cache:clear
+            sudo docker exec $CONTAINER_FOOTBRAINPRO npm install
+            sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console doctrine:database:create --if-not-exists
+            sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console doctrine:migrations:migrate --no-interaction
+            sudo docker exec $CONTAINER_FOOTBRAINPRO rm -rf public/assets
+            sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console importmap:install
+            sudo docker exec $CONTAINER_FOOTBRAINPRO sass assets/styles/app.scss:assets/styles/app.css
+            sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console asset-map:compile
