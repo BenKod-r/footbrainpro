@@ -41,7 +41,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro_prod:${{ github.sha }}
-            sudo docker tag ${{ secrets.DOCKER_USERNAME }}/footbrainpro_prod:${{ github.sha }} footbrainpro:latest
             sudo docker-compose up -d --remove-orphans
             sleep 10
 
