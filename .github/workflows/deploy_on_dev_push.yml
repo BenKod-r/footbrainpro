@@ -48,3 +48,5 @@ jobs:
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console doctrine:database:create --if-not-exists
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console doctrine:migrations:migrate --no-interaction
             sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console importmap:install
+            sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV rm -rf public/assets
+            sudo docker exec $CONTAINER_FOOTBRAINPRO_DEV php bin/console asset-map:compile
