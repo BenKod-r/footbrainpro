@@ -31,7 +31,7 @@ RUN docker-php-ext-install opcache && \
     echo "opcache.revalidate_freq=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini && \
     echo "opcache.validate_timestamps=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
-    # Installation de Node.js
+# Installation de Node.js
 RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
     npm install && \
