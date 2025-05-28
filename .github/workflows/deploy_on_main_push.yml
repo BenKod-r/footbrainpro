@@ -55,7 +55,7 @@ jobs:
             sleep 10
 
             # Récupère le nom du conteneur
-            CONTAINER_FOOTBRAINPRO=$(sudo docker ps --filter ancestor=${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest --format "{{.Names}}" | head -n 1)
+            CONTAINER_FOOTBRAINPRO=$(sudo docker ps --filter ancestor=footbrainpro_prod:latest --format "{{.Names}}" | head -n 1)
 
             # Nettoyage du cache (dev)
             sudo docker exec $CONTAINER_FOOTBRAINPRO php bin/console cache:clear
