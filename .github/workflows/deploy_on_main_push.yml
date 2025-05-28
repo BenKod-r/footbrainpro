@@ -25,10 +25,13 @@ jobs:
 
       - name: 🛠️ Build and Push Prod Image
         run: |
+          # Remplace dynamiquement le tag dans le fichier compose
+          sed "s|IMAGE_TAG|${{ github.sha }}|g" compose.prod.yaml > compose.prod.built.yaml
+
           # Build & push via Docker Compose
-          docker compose -f compose.prod.yaml build
-          docker tag footbrainpro_app:latest ${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest
+          docker compose -f compose.prod.built.yaml build
+          docker tag footbrainpro_app:latest ${{ secrets.DOCKER_USERNAME }}/footbrainpro_prod:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/footbrainpro_prod:${{ github.sha }}
 
       - name: 🚀 Deploy to PROD via SSH
         uses: appleboy/ssh-action@v1.0.0
@@ -37,8 +40,18 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro:latest
+            # Stoppe et supprime les conteneurs utilisant l'image (optionnel si `--remove-orphans` gère tout)
+            sudo docker-compose down
+            # Supprime l'image only si elle existe
+            sudo docker rmi footbrainpro_prod:latest || true
+            # Pull de l’image fraîchement buildée
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro_prod:${{ github.sha }}
+            # Retag
+            sudo docker tag ${{ secrets.DOCKER_USERNAME }}/footbrainpro_prod:${{ github.sha }} footbrainpro_prod:latest
+            # Redémarre les services
             sudo docker-compose up -d --remove-orphans
+            
+            # Arrêt de 10 secondes
             sleep 10
 
             # Récupère le nom du conteneur
