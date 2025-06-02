@@ -1,5 +1,5 @@
 ### ✅ deploy_on_main_push.yml : build & push image Docker en production (tag = `latest`)
-name: 🚀 Deploy to Prod on merge to main
+name: 🚀 Deploy to Prod (footbrainpro.com) on merge to main
 
 on:
   push:
