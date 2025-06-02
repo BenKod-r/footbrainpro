@@ -40,12 +40,12 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            # Pull de l’image fraîchement buildée
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:${{ github.sha }}
             # Stoppe et supprime les conteneurs utilisant l'image (optionnel si `--remove-orphans` gère tout)
             sudo docker-compose down
             # Supprime l'image only si elle existe
             sudo docker rmi footbrainpro_dev:latest || true
-            # Pull de l’image fraîchement buildée
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:${{ github.sha }}
             # Retag
             sudo docker tag ${{ secrets.DOCKER_USERNAME }}/footbrainpro_dev:${{ github.sha }} footbrainpro_dev:latest
             # Redémarre les services
