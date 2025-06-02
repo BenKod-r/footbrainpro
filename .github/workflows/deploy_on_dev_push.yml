@@ -1,5 +1,5 @@
 ### ✅ deploy_on_dev_push.yml : build & push image Docker en dev (tag = commit SHA)
-name: 🧪 Deploy to Dev on merge to dev
+name: 🧪 Deploy to Dev (dev.footbrainpro.com) on merge to dev
 
 on:
   push:
