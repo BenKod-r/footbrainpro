@@ -47,7 +47,7 @@ jobs:
             sudo docker ps -q --filter ancestor=footbrainpro_prod:latest | xargs -r sudo docker stop
             sudo docker ps -aq --filter ancestor=footbrainpro_prod:latest | xargs -r sudo docker rm
             
-            # Supprime l'image only si elle existe
+            # Supprime l'image latest si elle existe
             sudo docker rmi footbrainpro_prod:latest || true
             
             # Retag
