@@ -42,12 +42,17 @@ jobs:
           script: |
             # Pull de l’image fraîchement buildée
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/footbrainpro_prod:${{ github.sha }}
-            # Stoppe et supprime les conteneurs utilisant l'image (optionnel si `--remove-orphans` gère tout)
-            sudo docker-compose down
-            # Supprime l'image only si elle existe
+            
+            # Stoppe et supprime conteneurs utilisant l'image
+            sudo docker ps -q --filter ancestor=footbrainpro_prod:latest | xargs -r sudo docker stop
+            sudo docker ps -aq --filter ancestor=footbrainpro_prod:latest | xargs -r sudo docker rm
+            
+            # Supprime l'image latest si elle existe
             sudo docker rmi footbrainpro_prod:latest || true
+            
             # Retag
             sudo docker tag ${{ secrets.DOCKER_USERNAME }}/footbrainpro_prod:${{ github.sha }} footbrainpro_prod:latest
+            
             # Redémarre les services
             sudo docker-compose up -d --remove-orphans
             
